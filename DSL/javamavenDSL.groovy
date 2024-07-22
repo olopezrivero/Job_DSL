@@ -1,9 +1,9 @@
 job('Java Maven App DSL') {
     description('Java Maven App con DSL para el curso de Jenkins')
     scm {
-        git('https://github.com/macloujulian/simple-java-maven-app.git', 'master') { node ->
-            node / gitConfigName('macloujulian')
-            node / gitConfigEmail('macloujulian@gmail.com')
+      git('https://github.com/olopezrivero/Job_DSL.git', 'master') { node ->
+        node / gitConfigName('olopezrivero')
+        node / gitConfigEmail('olopezrivero@zeni.com.ar')
         }
     }
     steps {
@@ -20,25 +20,21 @@ job('Java Maven App DSL') {
           java -jar "/var/jenkins_home/workspace/Java Maven App DSL/target/my-app-1.0-SNAPSHOT.jar"
         ''')  
     }
-    publishers {
-        archiveArtifacts('target/*.jar')
-        archiveJunit('target/surefire-reports/*.xml')
-	slackNotifier {
-            notifyAborted(true)
-            notifyEveryFailure(true)
-            notifyNotBuilt(false)
-            notifyUnstable(false)
-            notifyBackToNormal(true)
-            notifySuccess(true)
-            notifyRepeatedFailure(false)
-            startNotification(false)
-            includeTestSummary(false)
-            includeCustomMessage(false)
-            customMessage(null)
-            sendAs(null)
-            commitInfoChoice('NONE')
-            teamDomain(null)
-            authToken(null)
-       }
+  	 properties {  
+        office365ConnectorWebhooks {
+            webhooks {
+                webhook {
+                    name('Jenkins-DSL')
+                    url('https://enriquezeni.webhook.office.com/webhookb2/920c20af-d214-4648-b537-105f2efeffec@9d616da3-f444-48df-aea4-ae00aeb3403e/JenkinsCI/0085251523d94bc587b316e9895d17f4/1c549eee-f4e1-479b-89fd-96e25e656e91')
+                    startNotification(false)
+                    notifySuccess(true)
+                    notifyAborted(false)
+                    notifyNotBuilt(false)
+                    notifyUnstable(true)
+                    notifyFailure(true)
+                    notifyBackToNormal(true)
+                    notifyRepeatedFailure(false)
+                    timeout(30000)
+                }
     }
 }
