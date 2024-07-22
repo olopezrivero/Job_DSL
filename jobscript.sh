@@ -8,4 +8,4 @@ else
 fi
 echo "..."
 sleep 10
-echo "!suerte la necesitaras!"
+echo "!!suerte la necesitaras!!!"
