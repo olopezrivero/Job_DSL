@@ -1,26 +1,30 @@
 job('Java Maven App DSL') {
     description('Java Maven App con DSL para el curso de Jenkins')
     scm {
-      git('https://github.com/olopezrivero/Job_DSL.git', 'master') { node ->
-        node / gitConfigName('olopezrivero')
-        node / gitConfigEmail('olopezrivero@zeni.com.ar')
+        git('https://github.com/olopezrivero/Job_DSL.git', 'master') { node ->
+            node / gitConfigName('olopezrivero')
+            node / gitConfigEmail('olopezrivero@zeni.com.ar')
         }
     }
     steps {
         maven {
-          mavenInstallation('mavenjenkins')
-          goals('-B -DskipTests clean package')
+            mavenInstallation('mavenjenkins')
+            goals('-B -DskipTests clean package')
         }
         maven {
-          mavenInstallation('mavenjenkins')
-          goals('test')
+            mavenInstallation('mavenjenkins')
+            goals('test')
         }
         shell('''
-          echo "Entrega: Desplegando la aplicación" 
+          echo "Entrega: Desplegando la aplicación"
           java -jar "/var/jenkins_home/workspace/Java Maven App DSL/target/my-app-1.0-SNAPSHOT.jar"
-        ''')  
+        ''')
     }
-  	 properties {  
+    publishers {
+        archiveArtifacts('target/*.jar')
+        archiveJunit('target/surefire-reports/*.xml')
+    }
+    properties {
         office365ConnectorWebhooks {
             webhooks {
                 webhook {
@@ -36,5 +40,7 @@ job('Java Maven App DSL') {
                     notifyRepeatedFailure(false)
                     timeout(30000)
                 }
+            }
+        }
     }
 }
